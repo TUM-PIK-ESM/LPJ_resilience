@@ -19,9 +19,12 @@ dpi=500
 
 
 explist=('sba0082','sba0084', 'sba0087')
+explist=('sba0084',)
+
 varlist=('vegc',) #'agb','agb_tree')
-typelist=('ACyL10',)
+#typelist=('ACyL10',)
 #typelist=('SDy',)
+typelist=('timmean',)
 
 
 #explist=('sba0084',)

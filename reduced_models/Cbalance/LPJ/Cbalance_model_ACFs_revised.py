@@ -69,9 +69,6 @@ plot_AC_all=1               # all
 
 #### figures for the paper
 
-#nametag="TEST"
-#versions=("A1N1M1E1A1S1",)
-
 ## Fig ACF a
 #nametag="shuffling"
 #versions=("A1N1M1E1A1S0","A1N1M1E1A1S1")
@@ -92,41 +89,6 @@ plot_AC_all=1               # all
 #versions=("A1N1M1E1A1S0","A1N1M1E1A1S1","A1N3M0E1A1S1")
 
 
-#### demo, PIK
-#nametag="PIK1"
-#versions=("A1N1M1E1A1S1",)
-#
-#nametag="PIK2"
-#versions=("A1N1M1E1A1S1","A1N3M0E1A1S1")
-#
-##nametag="PIK3"
-##versions=("A1N1M1E1A1S0",)
-##
-##nametag="PIK4"
-##versions=("A1N1M1E1A1S0","A1N3M0E1A1S0")
-
-
-#nametag="AC_from_N_to_C"
-#versions=("A1N2M0E1A1S0","A1N2M0E1A1S1")  # S0 has the AC pattern, S1 not
-#
-#nametag="AC_from_N_to_C2"
-#versions=("A1N2M1E1A1S0","A1N2M1E1A1S1")  # S0 has the AC pattern, S1 not
-#
-#nametag="AC_from_N_to_C3"
-#versions=("A1N3M0E1A1S1","A1N2M0E1A1S1")   ## all equal (due to shuffling in A1N2)
-#
-#nametag="AC_from_N_to_C4"
-#versions=("A1N3M0E1A1S0","A1N2M0E1A1S0")   # A1N2 has the AC pattern, N3 not
-#
-## => The pattern is not present for any N3 version (fixed N)
-## It appears for N2, but only if I do not shuffle.
-#
-### total versions:
-## Fig ACF b
-#nametag="AC_from_N_to_C5"
-#versions=( "A1N3M0E1A1S0", "A1N3M0E1A1S1","A1N2M0E1A1S0","A1N2M0E1A1S1")
-# called CmNf_R0 CmNf_R1 CiNp_R0 CiNp_R1 in submitted version
-
 ## revised paper, Fig ACF1
 #nametag="AC1"
 #versions=("A1N1M1E1A1S1","A1N3M0E1A1S1",)
@@ -135,67 +97,21 @@ plot_AC_all=1               # all
 #nametag="AC1_CN_vs_C"
 #versions=("A1N1M0E1A1S1","A1N3M0E1A1S1",)
 
-nametag="AC1_shuffle_and_mort"
-versions=("A1N1M1E1A1S0", "A1N1M1E1A1S1","A1N1M0E1A1S1")
-
-#versions=("A1N0M0S0","A1N0M0S1","A1N0M0S2", "A1N7M0S0","A1N7M0S1", "A1N7M0S2") 
-#versions=("A1N0M0S0","A1N0M0S1","A1N0M0S2", "A1N7M0S0",) 
-#versions=("A1N0M0S0","A1N0M0S2", "A1N7M0S0","A1N7M0S2") 
-#models=("A1N1")
-#nametag="shuffling_NvsA"
+#nametag="AC1_shuffle_and_mort"
+#versions=("A1N1M1E1A1S0", "A1N1M1E1A1S1","A1N1M0E1A1S1")
 
 
-## Fig. ACF_N_N4 a
+
+## Fig. ACF_N_N4 a (revised paper, ACF2 a)
 #nametag="ACN"
 #versions=("A2N1M0E1A1S1","A2N1M0E3A1S1","A2N1M0E1A0S1","A2N1M0E3A0S1")
 
-#nametag="A2N1"
-#versions=("A2N1M0E1A1S1",)
+
+### Fig. ACF_N_N4 b (revised paper, ACF2 b)
+nametag="ACN4" #E1A0 is unstable! now, all versions show an AC gap, including E3A0
+versions=("A1N1M0E1A1S1","A1N1M0E3A1S1","A1N1M0E3A0S1")
 
 
-
-##nametag="ACN2"
-##versions=("A2N1M0E1A1S1","A2N1M0E0A1S1","A2N1M0E1A0S1","A2N1M0E0A0S1")
-##
-##nametag="ACN3"
-##versions=("A2N1M0E1A1S1","A2N1M0E2A1S1","A2N1M0E1A0S1","A2N1M0E2A0S1")
-
-### Fig. ACF_N_N4 b
-#nametag="ACN4" #E1A0 is unstable! now, all versions show an AC gap, including E3A0
-#versions=("A1N1M0E1A1S1","A1N1M0E3A1S1","A1N1M0E3A0S1")
-
-
-#nametag="A0"
-##versions=("A1N1M1E1A1S0","A0N1M1E1A1S0",)
-#versions=("A1N1M1E1A1S0","A0N1M1E1A1S0","A0N1M1E1A1S1", "A0N1M1E1A1S2")
-#
-#nametag="A3"
-#versions=("A1N1M1E1A1S0","A3N1M1E1A1S0","A3N1M1E1A1S1", "A3N1M1E1A1S2")
-#
-#nametag="A0A3"
-#versions=("A1N1M1E1A1S1","A3N1M1E1A1S1", "A0N1M1E1A1S1")
-
-#nametag="A0N1M1"
-#versions=("A1N1M1E1A1S1","A0N1M1E1A1S1",)
-
-#nametag="A0N1M0"
-#versions=("A1N1M0E1A1S1","A0N1M0E1A1S1",)
-
-#nametag="A0Nx"
-#versions=("A1N1M1E1A1S1","A0N1M1E1A1S1","A0N3M1E1A1S1")
-
-#nametag="A0_M0"
-#versions=("A1N1M0E1A1S1","A0N1M0E1A1S1","A0N3M0E1A1S1")
-
-#nametag="A0N3"
-##versions=("A1N1M0E1A1S1","A1N3M0E1A1S1","A0N3M0E1A1S1")
-#versions=("A1N3M0E1A1S1","A0N3M0E1A1S1")
-
-#nametag="A0N0"
-#versions=("A0N3M0E1A1S1","A0N0M0E1A1S1")
-
-#nametag="A1N0"
-#versions=("A1N3M0E1A1S1","A1N0M0E1A1S1")
 
 
 #############################
@@ -216,7 +132,8 @@ def plot_AC_all_fun(variable_name):
         if versionind==0:
             color='#BB5566' #red
         elif versionind==1:
-            color='#004488' # blue
+#            color='#004488' # blue
+            color='#4477AA' # blue
         elif versionind==2:
             color='#DDAA33' #yellow
         elif versionind==3:
@@ -226,7 +143,7 @@ def plot_AC_all_fun(variable_name):
             if versionind==0:
                 color='#BB5566' #red
             elif versionind==1:
-                color='#004488' # blue
+                color='#4477AA' # blue
             elif versionind==2:
                 color='black'
 
@@ -844,7 +761,7 @@ if plot_AC_versions==1:
 if plot_AC_all==1:
     if nametag[0:3]=="ACN":
         plot_AC_all_fun("N")
-        plot_AC_all_fun("Cperm2")  ## comment out
+       # plot_AC_all_fun("Cperm2")
     elif nametag[0:2]=="A0" or nametag=="A0_M0":
         plot_AC_all_fun("Cperm2")
     else:

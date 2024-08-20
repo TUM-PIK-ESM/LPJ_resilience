@@ -82,8 +82,7 @@ index_PS=0
 ## E+M+A has positive slope in the default model, because of mortality
 ## single line is not a good fit, the tendencies are bimodal.
 
-# allo scatter
-#versions=("A1N1M1E1A1S1",)
+# allocation scatter plots
 versions=("A1N1M0E1A1S1",)
 
 
@@ -249,7 +248,7 @@ def fig_N_scatter(ts1,ts2,ts1_name,ts2_name):
 def fig_A_scatter(var1, var2, var3, var1_name, var2_name, var3_name):    
     plt.figure(dpi=dpi)
     
-    plt.rcParams.update({'font.size': 18})
+    plt.rcParams.update({'font.size': 24})
     fig, ax = plt.subplots(figsize=(8,6))
     #var1=globals()[var1_name + '_yearly']
     #var2=globals()[var2_name + '_yearly']
