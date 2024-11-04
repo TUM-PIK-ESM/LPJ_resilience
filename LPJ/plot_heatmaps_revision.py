@@ -121,15 +121,14 @@ for type in typelist:
 
                 
                 ax.invert_yaxis()
-                ax.set_xticks(np.arange(0,len(PSvec)))
-                ax.set_yticks(np.arange(0,len(MAPvec)))
+                ax.set_yticks(np.arange(0,len(PSvec)))
+                ax.set_xticks(np.arange(0,len(MAPvec)))
                 #if dims==4:
                 #    plt.title(exp+ ', ' + var+', index '+str(level)+', ' + type,  fontsize=fontsize_title)
                 #else:
                 #    plt.title(exp+ ', ' + var +', ' + type, fontsize=fontsize_title)
                     
                 ax.set_xticklabels(MAPvec, fontsize=fontsize_ticks)
-
                 ax.set_yticklabels(PSfactvec, fontsize=fontsize_ticks)
                 cbar = plt.colorbar(Panel)
                 if type.find('AC') != -1:
