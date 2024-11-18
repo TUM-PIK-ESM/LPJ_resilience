@@ -87,16 +87,39 @@ res=y  # always for LPJ because pools and N have yearly steps
 #typelist="timmean AC${res}L10" #AC${res}L01 
 
 ## sba0082-87
-explist="sba0082 sba0084 sba0087"
-explist="sba0084"
-vars="agb_tree agb vegc pft_nind pft_n_est fpc pft_vegc pft_chawo pft_cleaf pft_croot pft_csapw pft_bm_delta pft_wscal pft_bm_inc_carbon_afterallo pft_bm_inc_carbon_beforeallo pft_nind_beforemort pft_nind_beforeest pft_nind_afterest pft_est pft_mort pft_tinc_ind_cleaf pft_tinc_ind_croot pft_tinc_ind_csapw pft_tinc_ind_chawo"
+#explist="sba0082 sba0084 sba0087"
+#explist="sba0080"
+#vars="agb_tree agb vegc pft_nind pft_n_est fpc pft_vegc pft_chawo pft_cleaf pft_croot pft_csapw pft_bm_delta pft_wscal pft_bm_inc_carbon_afterallo pft_bm_inc_carbon_beforeallo pft_nind_beforemort pft_nind_beforeest pft_nind_afterest pft_est pft_mort pft_tinc_ind_cleaf pft_tinc_ind_croot pft_tinc_ind_csapw pft_tinc_ind_chawo"
+#vars="pft_mort"
+#typelist="timmean"
+
+## runs with input2
+#explist="sba0056 sba0061 sba0062 sba0063 sba0064 sba0065 sba0066 sba0067 sba0068"
+explist="sba0042 sba0044"
+#vars="pft_nind_beforemort pft_bm_inc_carbon_beforeallo pft_n_est" 
+#vars="agb pft_wscal swc1 swc2 swc pft_vegc pft_chawo pft_cleaf pft_croot pft_csapw pft_npp fpc"
+vars="pft_wscal"
 typelist="timmean"
+
+#vars="lai_eff gpp npp fpc_woody" ## to check if resilience also works for other variables
+#typelist="timmean AC${res}L05 AC${res}L01"
+
+#vars="vegc agb cleafperm2 crootperm2 csapwperm2 chawoperm2 VOD1 VOD2 VOD3 VOD4 VOD5 VOD6"  # to check robustness of pseudo VOD
+#typelist="timmean AC${res}L05 AC${res}L10"
+
+
+#explist="sba0070 sba0071 sba0072 sba0073 sba0074 sba0075 sba0076 sba0077 sba0078"
+#vars="gpp pft_nind agb vegc pft_chawo pft_cleaf pft_croot pft_csapw pft_npp fpc"
+#typelist=""
+
+#explist="sba0056"
+#vars="pft_nind pft_vegc"
+#typelist="timmean AC${res}L05 AC${res}L01"
+
 
 
 #vars="vegc agb_tree agb"
 #typelist="AC${res}L01 AC${res}L05 AC${res}L10 AC${res}L30 SD${res}"
-
-
 
 ## check agb_tree in other runs: => this is not the reason for the shifted MAPcrit
 #explist="sba0042"
@@ -190,9 +213,9 @@ for var in ${vars}; do
       fi
         
       if [[ ${var} == "fpc" ]]; then
-        cdo sellevel,2/12 ${var}.nc ${var}_cut.nc   # there are 11 PFTs, but first level in this file is natural fraction per veg fraction. result will be called level 1-11 after download!
+        cdo sellevel,2/12 ${var}.nc ${var}_cut.nc   # there are 11 PFTs, but first level in this file is natural fraction per veg fraction. result will be called level 1-11 after download
         mv ${var}_cut.nc ${var}.nc
-      else
+      elif [[ ! ${var} == "swc" ]]; then
         cdo sellevel,0/11 ${var}.nc ${var}_cut.nc   # from level 0 because files without levels have only 0
         mv ${var}_cut.nc ${var}.nc
       fi

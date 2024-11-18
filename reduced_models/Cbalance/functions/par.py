@@ -9,7 +9,6 @@ Created on Fri Sep  1 18:49:41 2023
 import numpy as np
 import par
 
-
 def set_fixed_parameters(PFT):
     global allom1, allom2, allom3 
     global fL_default, fR_default, fS_default
@@ -26,7 +25,7 @@ def set_fixed_parameters(PFT):
     allom1=100.0     # no unit
     allom2=40.0      # no unit
     allom3=0.67      # /*0.5*/   no unit
-    reinickerp=1.6   # no unit   
+    reinickerp=1.6   # no unit
     k_latosa=6e3     # no unit  , from par/pft.js
     wooddens=2e5     # gC/m3    , from include/tree.h
     k_mort=0.2       # no unit
@@ -41,10 +40,10 @@ def set_fixed_parameters(PFT):
     lmro_ratio=1.0    ## this is the same for all trees! leaf mass to root mass, from par/pft.js
     lmro_offset=0.5   # from par/pft.js
     
-    CDEBT_MAXLOAN_DEFICIT=0.8 # maximum loan as a fraction of deficit  # in allocation_tree.c 
-    CDEBT_MAXLOAN_MASS=0.2   # maximum loan as a fraction of (sapwood-cdebt)  # in allocation_tree.c 
+    CDEBT_MAXLOAN_DEFICIT=0.8 # maximum loan as a fraction of deficit  # in allocation_tree.c
+    CDEBT_MAXLOAN_MASS=0.2    # maximum loan as a fraction of (sapwood-cdebt)  # in allocation_tree.c
     NSEG=20 # number of segments (parameter in numerical methods)
-    #CDEBT_PAYBACK_RATE=0.2     # in turnover_tree.c 
+    #CDEBT_PAYBACK_RATE=0.2     # in turnover_tree.c
     
     ### parameters for leftmostzero
     ## default from LPJ:
@@ -128,7 +127,6 @@ def set_fixed_parameters_multiPFT():
     
     k_est=0.12
 
-
     ### The 8 tree types:    
     # tropical broadleaved evergreen tree
     # tropical broadleaved raingreen tree
@@ -139,15 +137,13 @@ def set_fixed_parameters_multiPFT():
     # boreal broadleaved summergreen tree
     # boreal needleleaved summergreen tree    
     
-##    # PFT-specific params for all 8 trees (no grasses)
+##   # PFT-specific params for all 8 trees (no grasses)
 #    fL_default=[0.5, 1, 0.25, 1, 1, 0.25, 1, 1]
 #    fR_default=[0.5, 1, 0.25, 1, 1, 0.25, 1, 1]
 #    fS_default=[0.0333333333, 0.033333333333, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04]
     fL=[0.5, 1, 0.25, 1, 1, 0.25, 1, 1]
     fR=[0.5, 1, 0.25, 1, 1, 0.25, 1, 1]
     fS=[0.0333333333, 0.033333333333, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04]
-
-
     lai_sapl=[1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5]
     wood_sapl=[1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2]
     CAmax=[25, 15, 15, 15, 25, 20, 20, 20]
@@ -181,7 +177,6 @@ def set_fixed_parameters_multiPFT():
         Rsapl[PFTind]=(1.0/lmro_ratio)*Lsapl[PFTind]
 
     Csapl=Lsapl+Rsapl+Ssapl+Hsapl
-
 
 
 

@@ -13,7 +13,7 @@ Created on Mon Feb 20 09:51:54 2023
 # with allocation enabled, model does not give identical results to LPJ anymore,
 # at least at dry grid cells.
 # However, model stays stable, and correlation between LPJ and this implementation is around ~0.99
-# The mean values can be a bit off ( 8-9% for chawo, rest smaller)
+# The mean values can be a bit off (8-9% for chawo, rest smaller)
 
 import numpy as np
 #import matplotlib as mpl

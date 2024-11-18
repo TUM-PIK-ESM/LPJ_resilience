@@ -135,12 +135,7 @@ def assign_varname(var_case,type):
         if type=='timstd' or type == "SDy":
             minval=0
             maxval=600
-
-#        elif type[0:8]=='recovery':
-#            minval=0
-#            maxval=500
-            
-        
+                  
     elif var_case=='pft_vegc' or var_case=='Dpft_vegc':
         varname='vegC_pft'
         minval=0
@@ -168,7 +163,7 @@ def assign_varname(var_case,type):
         minval=0
         maxval=24000
         
-    elif var_case=='fpc' or var_case=='fpc_TropBL' or var_case=='fpc_woody':
+    elif var_case=='fpc' or var_case=='fpc_TropBL' or var_case=='fpc_woody'  or var_case=='lai_eff':
         varname='FPC'
         unit="m²/m²"
         minval=0
@@ -297,7 +292,18 @@ def assign_varname(var_case,type):
         varname='nind'
         minval=0
         maxval=35000
-        
+
+    elif var_case=='VOD1' or var_case=='VOD2' or var_case=='VOD3' or var_case=='VOD4' or var_case=='VOD5':
+        unit=""
+        varname='nind'
+        minval=0
+        maxval=1
+    elif var_case=='VOD6': 
+        unit=""
+        varname='AGB'
+        minval=0
+        maxval=1
+
     elif var_case=='pft_vegcperind':
         unit='[gC/ind]'
         varname='vegC_pft'
@@ -369,7 +375,7 @@ def assign_varname(var_case,type):
         varname='tinc_ind_chawo'
         minval=-2
         maxval=300
-    elif var_case=='pft_n_est':
+    elif var_case=='pft_n_est' or var_case=='n_woody':
         varname='pft_n_est'
         minval=0
         maxval=4
@@ -404,6 +410,18 @@ def assign_varname(var_case,type):
         minval=0.0
         maxval=1.0
 
+    elif var_case=='Tau_inv':
+        varname='NPP'
+        unit='yr'
+        minval=0.0
+        maxval=20
+
+    elif var_case=='Tau':
+        varname='NPP'
+        unit='1/yr'
+        minval=0.02
+        maxval=0.1
+
     elif var_case=='est' or var_case=='pft_est':
         varname='establishment'
         unit='ind/(m2yr)'
@@ -428,8 +446,11 @@ def assign_varname(var_case,type):
         minval=0.0
         maxval=25  
 
-
     else:
         print('variable not found')
+
+    if type[0:8]=='recovery':
+        minval=0
+        maxval=500
 
     return varname, unit, minval, maxval, cmap_var
