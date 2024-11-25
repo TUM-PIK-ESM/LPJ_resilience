@@ -2,9 +2,9 @@
 
 ### takes basic output from reduced model and combines it to derive more variables
 
-exp="test1"  # 1, 5
-exp_driving="sba0056"
-NPFT=8
+#exp="test1"  # 1, 5
+#exp_driving="sba0056"
+#NPFT=8
 
 #exp="test2" # 2, 6
 #exp_driving="sba0061"
@@ -18,17 +18,39 @@ NPFT=8
 #exp_driving="sba0044"
 #NPFT=1
 
+exp_list="sba0056_P0000 sba0056_P0010 sba0056_P0011 sba0056_P0012 sba0056_P0013 sba0056_P0014 sba0056_P0015 sba0056_P0020 sba0056_P0021 sba0056_P0022 sba0056_P0023 sba0056_P0024 sba0056_P0025 sba0056_P0030 sba0056_P0031 sba0056_P0032 sba0056_P0033 sba0056_P0034 sba0056_P0035"
+exp_list="sba0056_P0041"
 
-calc_new=1
+exp_driving="sba0056"
+NPFT=8
 
-cd ${exp}
+calc_new=0
+
+
+for exp in ${exp_list}; do
+
+cd /home/bathiany/Projects/Vegetation_resilience_indicators/reduced_models/Cbalance/LPJ_multiPFT/${exp}
 
 ### carbon pools per m2: g/ind x ind/m2
 for pool in cleaf csapw croot chawo; do
  if [[ ! -f ${pool}perm2.nc || ${calc_new} == 1 ]]; then
-   cdo mul pft_nind.nc pft_${pool}.nc pft_${pool}perm2.nc
-   cdo timmean pft_${pool}perm2.nc pft_${pool}perm2_timmean.nc
-   cdo vertsum pft_${pool}perm2.nc ${pool}perm2.nc
+    cdo mul pft_nind.nc pft_${pool}.nc pft_${pool}perm2.nc
+    cdo timmean pft_${pool}perm2.nc pft_${pool}perm2_timmean.nc
+    cdo vertsum pft_${pool}perm2.nc ${pool}perm2.nc
+
+    if [[ ${pool} == "chawo" ]]; then
+        varname="C_heartwood_pft"
+    elif [[ ${pool} == "csapw" ]]; then
+        varname="C_sapwood_pft"
+    elif [[ ${pool} == "croot" ]]; then
+        varname="C_root_pft"
+    elif [[ ${pool} == "cleaf" ]]; then
+        varname="C_leaf_pft"
+    fi
+
+    cdo setname,${varname} ${pool}perm2.nc named.nc
+    mv named.nc ${pool}perm2.nc
+
  fi
 done
 
@@ -38,10 +60,15 @@ if [[ ! -f pft_vegc.nc || ${calc_new} == 1 ]]; then
  cdo add pft_csapwperm2.nc pft_chawoperm2.nc SH.nc
  cdo add LR.nc SH.nc pft_vegc.nc
  rm LR.nc SH.nc
+ cdo setname,VegC_pft pft_vegc.nc named.nc
+ mv named.nc pft_vegc.nc
 fi
+
 
 if [[ ! -f vegc.nc || ${calc_new} == 1 ]]; then
   cdo vertsum pft_vegc.nc vegc.nc
+  cdo setname,VegC vegc.nc named.nc
+  mv named.nc vegc.nc
 fi
 
 ## agb
@@ -56,17 +83,26 @@ if [[ ! -f agb.nc || ${calc_new} == 1 ]]; then
   cdo vertsum pft_agb.nc agb.nc
 fi
 
+if [[ ! -f nind.nc || ${calc_new} == 1 ]]; then
+  cdo vertsum pft_nind.nc nind.nc
+fi
 
+
+
+done
+
+
+exit
 #### eval with LPJ
 #varlist="pft_cleaf pft_croot pft_csapw pft_chawo pft_vegc pft_nind fpc vegc"
 varlist="vegc agb"
 
 LPJdir="/home/bathiany/Projects/Vegetation_resilience_indicators/LPJ/"
 
+for exp in ${exp_list}; do
 for var in ${varlist}; do
   
   years=$(cdo -s showyear ${var}.nc)
-  #start_year=$(cdo -s showyear ${var}.nc | sed 's/ //g' | head -c 5) # only works if start year has 4 digits
   start_year=$(cdo -s showyear ${var}.nc | head -c 5) # only works if start year has 4 digits
   start_year=$(echo ${start_year} | sed 's/ //g' ) 
   end_year=`echo ${years} | awk '{print $NF}'`
@@ -105,9 +141,9 @@ for var in ${varlist}; do
    
   fi
   
-done
+done #var
 
-
+done #exp
 
 
 exit
