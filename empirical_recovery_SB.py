@@ -2,6 +2,9 @@
 
 import numpy as np
 import scipy.stats, scipy.signal, scipy.optimize
+import netCDF4 as nc
+import subprocess
+import sys
 
 ### estimates recovery rate, based on Taylor Smith's code; 
 ## see Smith, Traxl, Boers; Nature Clim Change, 2022
@@ -10,7 +13,87 @@ import scipy.stats, scipy.signal, scipy.optimize
 p0 = [-5000,-1/50]  ## initial values for parameters a and b in f(t)=a*exp(b*t)
 bounds = ([-100000, -1], [100000, 0])  # bounds of params a,b  ;  a < 0, b < 0 for recovery from below
 
+        
+def compute_recovery(var, datapath, yr_perturb):
+    Vegpath='/home/bathiany/Projects/Vegetation_resilience_indicators/'
+    LPJpath=Vegpath + 'LPJ/'
+    functionspath=Vegpath + 'reduced_models/Cbalance/functions/'
+    
+    sys.path.insert(1, functionspath)
+    import LPJ_functions
+    
+    sys.path.insert(1, Vegpath)
+    
+    sys.path.insert(1, LPJpath)
+    import assign_properties
+    
+    yr_perturb = int(yr_perturb)  # Convert to int if it's a string
+    
+    ## create templatefile
+    templatefile=datapath + '/'+var+'.nc'
+    
+    #command = ['cdo mulc,0 -sellevel,1/'+str(NPFT)+' -selyear,'+str(y_ini)+'/'+str(y_fin) + ' ' + templatefile + ' ' + outfile]
+    
+    outfile_recovtime=datapath + '/'+var+'_recoverytime.nc'
+    outfile_recovrate=datapath + '/'+var+'_recoveryrate.nc'
+    outfile_rsq=datapath + '/'+var+'_rsq.nc'
+    command1 = ['cdo mulc,0 -seltimestep,1 ' + templatefile + ' ' + outfile_recovtime]
+    command2 = ['cdo mulc,0 -seltimestep,1 ' + templatefile + ' ' + outfile_recovrate]
+    command3 = ['cdo mulc,0 -seltimestep,1 ' + templatefile + ' ' + outfile_rsq]
+    
+    subprocess.run(command1, shell=True, capture_output=True, text=True)
+    subprocess.run(command2, shell=True, capture_output=True, text=True)
+    subprocess.run(command3, shell=True, capture_output=True, text=True)
+    
+    ####
+    
+    varname=assign_properties.assign_varname(var,'')[0]
+    
+    file = nc.Dataset(datapath+'/vegc_anom2stat.nc')
+    var_all_recovery = file[varname]
+    
+    
+    dims=var_all_recovery.shape
+    ndims=np.size(dims)
+    if ndims==3:
+        var_recovery=LPJ_functions.unmask(var_all_recovery[:,:,:])
+    
+    elif ndims==4:
+        var_recovery=LPJ_functions.unmask(var_all_recovery[:,:,:,:])
+    
+    rate_matrix=np.zeros((dims[1],dims[2]))
+    time_matrix=np.zeros((dims[1],dims[2]))
+    rsq_matrix=np.zeros((dims[1],dims[2]))
+    
+    ## open outfile for writing
+    for lat in range(0,dims[1]):
+        for lon in range(0,dims[2]):
+            ## for level in ...
+            a, b, rsq = fit_to_transition_SB(var_recovery[yr_perturb+1:,lat,lon])
+            time_matrix[lat,lon]=-1/b
+            rate_matrix[lat,lon]=-b
+            rsq_matrix[lat,lon]=rsq
+    
+    write_data(rate_matrix, outfile_recovrate, varname)
+    write_data(time_matrix, outfile_recovtime, varname)
+    write_data(rsq_matrix, outfile_rsq, varname)
 
+
+
+
+def write_data(data, nc_filename, varname):
+
+    nc_file = nc.Dataset(nc_filename, mode="a")
+
+    var_nc = nc_file.variables[varname]
+    
+    # Write data into the variable
+    var_nc[0,:, :] = data
+    
+    # Close the NetCDF file
+    nc_file.close()
+    
+    
 ## To determine up to which point we should use the data (time of full recovery)
 ## but need to work with a marging, to stop beforehand
 def find_zero_crossing(data, margin_rel=0.05):
@@ -85,3 +168,7 @@ def fit_to_transition_SB(data):
 
     return fit_a, fit_b, rsq
 
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        compute_recovery(sys.argv[1], sys.argv[2], sys.argv[3])

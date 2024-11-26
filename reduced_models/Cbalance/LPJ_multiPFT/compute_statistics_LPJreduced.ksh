@@ -9,8 +9,9 @@ typelist="timmean ACyL01 ACyL02 ACyL05 ACyL10 ACyL20 ACyL30"
 #vars="vegc"
 #typelist="timmean ACyL05"
 
+exp_list="sba0056_P0010 sba0056_P0011 sba0056_P0012 sba0056_P0013 sba0056_P0014 sba0056_P0015 sba0056_P0020 sba0056_P0021 sba0056_P0022 sba0056_P0023 sba0056_P0024 sba0056_P0025 sba0056_P0030 sba0056_P0031 sba0056_P0032 sba0056_P0033 sba0056_P0034 sba0056_P0035 sba0056_P0040 sba0056_P0041 sba0056_P0042 sba0056_P0043 sba0056_P0044"
 
-#exp_list="sba0056_P0010 sba0056_P0011 sba0056_P0012 sba0056_P0013 sba0056_P0014 sba0056_P0015 sba0056_P0020 sba0056_P0021 sba0056_P0022 sba0056_P0023 sba0056_P0024 sba0056_P0025 sba0056_P0030 sba0056_P0031 sba0056_P0032 sba0056_P0033 sba0056_P0034 sba0056_P0035   sba0056_P0040 sba0056_P0041 sba0056_P0042 sba0056_P0043 sba0056_P0044"
+exp_list="sba0056_P0010"
 
 vars="vegc"
 typelist="recovery"
@@ -19,8 +20,8 @@ yr_perturb=200
 
 for exp in ${exp_list}; do
  cd /home/bathiany/Projects/Vegetation_resilience_indicators/reduced_models/Cbalance/LPJ_multiPFT/${exp}
- exp_stationary_start=`echo ${exp} | cut -c1-7`
- exp_stationary="${exp_stationary_start}_P0000"
+ exp_stationary_head=`echo ${exp} | cut -c1-7`
+ exp_stationary="${exp_stationary_head}_P0000"
  for var in ${vars}; do
   for type in ${typelist}; do
 
@@ -79,9 +80,9 @@ for exp in ${exp_list}; do
 
     elif [[ ${type} == "recovery" ]]; then  # type
 
-     #if [[ ! -f ${var}_recoveryrate.nc ]]; then 
-      ## use recovery_template code
-      cp ../recovery_template.py recovery_${var}_${exp}.py
+     if [[ ! -f ${var}_recoveryrate.nc ]]; then 
+      ## use recovery_template code (old)
+      #cp ../recovery_template.py recovery_${var}_${exp}.py
             
       ## compute anomaly w.r.t. stationary run's mean
       #cdo timmean ../${exp_stationary}/${var}.nc ${exp_stationary}_${var}.nc
@@ -97,15 +98,17 @@ for exp in ${exp_list}; do
       cdo sub ${var}.nc ${exp_stationary}_${var}.nc ${var}_anom2stat.nc
       rm ${exp_stationary}_${var}.nc
 
-      # modify content:
-      sed -i "s/experiment_id/${exp}/g" recovery_${var}_${exp}.py
-      sed -i "s/var_id/${var}/g" recovery_${var}_${exp}.py
-      sed -i "s/yr_perturb_id/${yr_perturb}/g" recovery_${var}_${exp}.py
+      ## modify content: (old)
+      #sed -i "s/experiment_id/${exp}/g" recovery_${var}_${exp}.py
+      #sed -i "s/var_id/${var}/g" recovery_${var}_${exp}.py
+      #sed -i "s/yr_perturb_id/${yr_perturb}/g" recovery_${var}_${exp}.py
+      ##exit
+      #python3 recovery_${var}_${exp}.py
+      #rm recovery_${var}_${exp}.py   
+      datapath=`pwd`
+      python3 /home/bathiany/Projects/Vegetation_resilience_indicators/empirical_recovery_SB.py ${var} ${datapath} ${yr_perturb}
 
-      #exit
-      python3 recovery_${var}_${exp}.py
-      rm recovery_${var}_${exp}.py
-     #fi
+     fi
     else
           
       cdo ${type} ${origfile} ${targetfile}

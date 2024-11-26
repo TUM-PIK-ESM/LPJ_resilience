@@ -22,14 +22,14 @@ fontsize_labels=18
 
 varlist=('vegc',)
 
-explist=('sba0056_P0000',)
-typelist=('ACyL10',)
+#explist=('sba0056_P0000',)
+#typelist=('ACyL10',)
 
-#explist=('sba0056_P0010', 'sba0056_P0013', 'sba0056_P0014', 'sba0056_P0015', 
-#         'sba0056_P0020', 'sba0056_P0023', 'sba0056_P0024', 'sba0056_P0025', 
-#         'sba0056_P0030', 'sba0056_P0033', 'sba0056_P0034', 'sba0056_P0035')
+explist=('sba0056_P0010', 'sba0056_P0013', 'sba0056_P0014', 'sba0056_P0015', 
+         'sba0056_P0020', 'sba0056_P0023', 'sba0056_P0024', 'sba0056_P0025', 
+         'sba0056_P0030', 'sba0056_P0033', 'sba0056_P0034', 'sba0056_P0035',
+         'sba0056_P0040', 'sba0056_P0041','sba0056_P0042','sba0056_P0043','sba0056_P0044')
 
-explist=('sba0056_P0024','sba0056_P0034')
 typelist=('recoverytime','recoveryrate')
 #typelist=('recoverytime',)
 

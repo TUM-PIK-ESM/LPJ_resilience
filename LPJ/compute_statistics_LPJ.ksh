@@ -61,15 +61,24 @@ res=y  # always for LPJ because pools and N have yearly steps
 #vars="vegc pft_nind pft_chawo pft_csapw pft_cleaf pft_croot pft_cdebt pft_height"
 #typelist="timmean"
 
-
 #explist="sba0056"
 #vars="pft_est"
 #typelist="timmean"
 
-
 ## recovery rate
 #explist="sba0070"
+explist="sba0070 sba0071 sba0072 sba0073 sba0074 sba0075 sba0076 sba0077 sba0078"
+#vars="gpp pft_nind agb vegc pft_chawo pft_cleaf pft_croot pft_csapw pft_npp fpc"
+vars="vegc"
+typelist="recovery"
+
+#explist="sba0056"
+#vars="pft_nind pft_vegc"
+#typelist="timmean AC${res}L05 AC${res}L01"
+
+
 #typelist=""
+
 
 ## AC
 #vars="vegc"
@@ -94,27 +103,18 @@ res=y  # always for LPJ because pools and N have yearly steps
 #typelist="timmean"
 
 ## runs with input2
-#explist="sba0056 sba0061 sba0062 sba0063 sba0064 sba0065 sba0066 sba0067 sba0068"
-explist="sba0042 sba0044"
-#vars="pft_nind_beforemort pft_bm_inc_carbon_beforeallo pft_n_est" 
-#vars="agb pft_wscal swc1 swc2 swc pft_vegc pft_chawo pft_cleaf pft_croot pft_csapw pft_npp fpc"
-vars="pft_wscal"
-typelist="timmean"
+##explist="sba0056 sba0061 sba0062 sba0063 sba0064 sba0065 sba0066 sba0067 sba0068"
+##explist="sba0042 sba0044"
+##vars="pft_nind_beforemort pft_bm_inc_carbon_beforeallo pft_n_est" 
+##vars="agb pft_wscal swc1 swc2 swc pft_vegc pft_chawo pft_cleaf pft_croot pft_csapw pft_npp fpc"
+#vars="pft_wscal"
+#typelist="timmean"
 
 #vars="lai_eff gpp npp fpc_woody" ## to check if resilience also works for other variables
 #typelist="timmean AC${res}L05 AC${res}L01"
 
 #vars="vegc agb cleafperm2 crootperm2 csapwperm2 chawoperm2 VOD1 VOD2 VOD3 VOD4 VOD5 VOD6"  # to check robustness of pseudo VOD
 #typelist="timmean AC${res}L05 AC${res}L10"
-
-
-#explist="sba0070 sba0071 sba0072 sba0073 sba0074 sba0075 sba0076 sba0077 sba0078"
-#vars="gpp pft_nind agb vegc pft_chawo pft_cleaf pft_croot pft_csapw pft_npp fpc"
-#typelist=""
-
-#explist="sba0056"
-#vars="pft_nind pft_vegc"
-#typelist="timmean AC${res}L05 AC${res}L01"
 
 
 
@@ -189,14 +189,7 @@ typelist="timmean"
 ####
 
 
-
-
 for var in ${vars}; do
-
-  #res=`echo ${var} | cut -c1`
-  #if [[ ! ${res} == m ]]; then
-  # res=y
-  #fi
 
   for exp in ${explist}; do
 
@@ -204,25 +197,8 @@ for var in ${vars}; do
     cd ${exp}
  
     if [[ ! -f ${var}.nc ]]; then
-      scp bathiany@cluster.pik-potsdam.de:/p/projects/tipes/bathiany/LPJmL/${exp}/output/${var}.nc .
-
-      if [[ ( ${exp} == sba0034 || ${exp} == sba0035 || ${exp} == sba0036 || ${exp} == sba0041 ) && -f ${var}.nc ]]; then 
-
-        cdo selyear,${year_ini}/${year_fin} ${var}.nc ${var}_cut.nc
-        mv ${var}_cut.nc ${var}.nc
-      fi
-        
-      if [[ ${var} == "fpc" ]]; then
-        cdo sellevel,2/12 ${var}.nc ${var}_cut.nc   # there are 11 PFTs, but first level in this file is natural fraction per veg fraction. result will be called level 1-11 after download
-        mv ${var}_cut.nc ${var}.nc
-      elif [[ ! ${var} == "swc" ]]; then
-        cdo sellevel,0/11 ${var}.nc ${var}_cut.nc   # from level 0 because files without levels have only 0
-        mv ${var}_cut.nc ${var}.nc
-      fi
-      
-      
-      
-      
+      echo "${var} not found"
+      exit      
     fi
 
     for type in ${typelist}; do
@@ -231,11 +207,8 @@ for var in ${vars}; do
      
      if [[ ! -f ${var}_${type}.nc || ${calc_new} == 1 ]]; then      
 
-      if [[ ( ${type} == yearmean || ${type} == timmax || ${type} == timmin || ${type} == timmean || ${type} == yearstd || ${type} == timstd || ${type} == ymonmin ) && -f ${var}.nc ]]; then
-      
-          cdo ${type} ${var}.nc ${var}_${type}.nc
 
-      elif [[ ${type} == "mask" ]]; then
+      if [[ ${type} == "mask" ]]; then
           cdo timmax ${var}.nc ${var}_${type}_temp.nc
           cdo setrtoc,0.1,9e99,4 ${var}_${type}_temp.nc ${var}_${type}.nc
           rm ${var}_${type}_temp.nc
@@ -330,6 +303,44 @@ for var in ${vars}; do
           rm ${var}_shift1.nc ${var}_shift2.nc ${var}_shift.nc 
         fi #AC
     
+    
+        elif [[ ${type} == "recovery" ]]; then
+
+          #export PYTHONPATH=$PYTHONPATH:/home/bathiany/Projects/Vegetation_resilience_indicators
+          yr_perturb=0
+          exp6digit=`echo ${exp} | cut -c6`
+          exp7digit=`echo ${exp} | cut -c7`
+          if [[ ${exp} == "sba0070" ]]; then
+            exp_stationary="sba0056"
+          elif [[ ${exp6digit} == "7" ]]; then
+            exp_stationary="sba006${exp7digit}"
+          else
+            echo "stationary sim not defined"
+          fi
+          
+          # compute anomaly w.r.t. stationary run (time dependent)
+          years=$(cdo -s showyear ${var}.nc)
+          start_year=$(cdo -s showyear ${var}.nc | head -c 5) # only works if start year has 4 digits
+          start_year=$(echo ${start_year} | sed 's/ //g' ) 
+          end_year=`echo ${years} | awk '{print $NF}'`
+          cdo selyear,${start_year}/${end_year} ../${exp_stationary}/${var}.nc ${exp_stationary}_${var}.nc
+          cdo sub ${var}.nc ${exp_stationary}_${var}.nc ${var}_anom2stat.nc
+
+          cdo sub ${var}.nc ${exp_stationary}_${var}.nc ${var}_anom2stat.nc
+          rm ${exp_stationary}_${var}.nc
+
+          datapath=`pwd`
+          #datapath="${datapath}/"
+          echo "${var} ${datapath} ${yr_perturb}"
+          
+          python3 /home/bathiany/Projects/Vegetation_resilience_indicators/empirical_recovery_SB.py ${var} ${datapath} ${yr_perturb}
+
+
+        
+        #if [[ ( ${type} == yearmean || ${type} == timmax || ${type} == timmin || ${type} == timmean || ${type} == yearstd || ${type} == timstd || ${type} == ymonmin ) && -f ${var}.nc ]]; then
+        else
+          cdo ${type} ${var}.nc ${var}_${type}.nc
+      
       fi #type
      fi #exists
     done #type
